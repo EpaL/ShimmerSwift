@@ -6,6 +6,7 @@ let package = Package(
     name: "ShimmerSwift",
     platforms: [
         .iOS(.v10)
+        .macOs(.v10)
     ],
     products: [
         .library(name: "ShimmerSwift", targets: ["ShimmerSwift"]),
