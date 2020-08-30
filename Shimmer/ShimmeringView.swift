@@ -33,14 +33,14 @@ import Foundation
 #if canImport(UIKit)
 import UIKit
 
-final public class ShimmeringView: UIView {
+final public class ShimmeringView: NSView {
 
     override public class var layerClass: Swift.AnyClass {
         return ShimmeringLayer.self
     }
 
     /// The content view to be shimmered
-    public var contentView = UIView() {
+    public var contentView = NSView() {
         didSet {
             if oldValue != contentView {
                 addSubview(contentView)
