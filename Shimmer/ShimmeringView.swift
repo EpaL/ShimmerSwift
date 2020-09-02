@@ -131,11 +131,6 @@ import AppKit
 
 final public class ShimmeringView: NSView {
 
-//    override public class var layerClass: Swift.AnyClass {
-//        return ShimmeringLayer.self
-//    }
-
-  
   /// Creates and returns the layer
   /// - Returns: The layer
   public override func makeBackingLayer() -> CALayer {
@@ -151,8 +146,6 @@ final public class ShimmeringView: NSView {
             }
         }
     }
-  
-  
 
     /// Set to `true` to start shimmer animation, and `false` to stop. Detaults to `false`.
     public var isShimmering: Bool = false {
@@ -219,16 +212,27 @@ final public class ShimmeringView: NSView {
     }
 
     override public init(frame: CGRect) {
-        super.init(frame: frame)
+      super.init(frame: frame)
+      configureViewSetting()
     }
 
     required init?(coder aDecoder: NSCoder) {
-        super.init(coder: aDecoder)
+      super.init(coder: aDecoder)
+      configureViewSetting()
     }
 
-    private var shimmerLayer: ShimmeringLayer? {
-        return (layer as? ShimmeringLayer)
-    }
+  /// Enable Layer-backed view
+  private func configureViewSetting() {
+    wantsLayer = true
+    layerContentsRedrawPolicy = .onSetNeedsDisplay
+  }
+  
+  public override var wantsUpdateLayer: Bool {
+    return true
+  }
 
+  private var shimmerLayer: ShimmeringLayer? {
+    return (layer as? ShimmeringLayer)
+  }
 }
 #endif
