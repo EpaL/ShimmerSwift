@@ -1,4 +1,4 @@
-platform :ios, '10.11'
+platform :ios, '10.10'
 
 target 'ShimmerSwift' do
 end
