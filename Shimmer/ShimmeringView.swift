@@ -129,11 +129,18 @@ final public class ShimmeringView: UIView {
 #elseif canImport(AppKit)
 import AppKit
 
-final public class ShimmeringView: UIView {
+final public class ShimmeringView: NSView {
 
-    override public class var layerClass: Swift.AnyClass {
-        return ShimmeringLayer.self
-    }
+//    override public class var layerClass: Swift.AnyClass {
+//        return ShimmeringLayer.self
+//    }
+
+  
+  /// Creates and returns the layer
+  /// - Returns: The layer
+  public override func makeBackingLayer() -> CALayer {
+    return ShimmeringLayer()
+  }
 
     /// The content view to be shimmered
     public var contentView = NSView() {
@@ -144,6 +151,8 @@ final public class ShimmeringView: UIView {
             }
         }
     }
+  
+  
 
     /// Set to `true` to start shimmer animation, and `false` to stop. Detaults to `false`.
     public var isShimmering: Bool = false {
@@ -203,10 +212,10 @@ final public class ShimmeringView: UIView {
         didSet { shimmerLayer?.shimmerFadeTime = shimmerFadeTime }
     }
 
-    override public func layoutSubviews() {
+    override public func layout() {
         contentView.bounds = self.bounds
-        contentView.center = self.center
-        super.layoutSubviews()
+//        contentView.center = self.center
+        super.layout()
     }
 
     override public init(frame: CGRect) {

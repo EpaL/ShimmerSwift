@@ -64,7 +64,7 @@ final public class Shimmer {
 
     static func slideAnimation(duration: CFTimeInterval, direction: Direction) -> CABasicAnimation {
         let animation = CABasicAnimation(keyPath: "position")
-        animation.toValue = NSValue(cgPoint: .zero)
+        animation.toValue = NSValue(point: .zero)
         animation.duration = duration
         animation.repeatCount = .greatestFiniteMagnitude
         if direction == .left || direction == .up {
