@@ -66,7 +66,7 @@ final public class Shimmer {
         let animation = CABasicAnimation(keyPath: "position")
         animation.toValue = NSValue(point: .zero)
         animation.duration = duration
-        animation.repeatCount = .greatestFiniteMagnitude
+//        animation.repeatCount = .greatestFiniteMagnitude
         if direction == .left || direction == .up {
             animation.speed = -fabsf(animation.speed)
         }
@@ -75,7 +75,7 @@ final public class Shimmer {
 
     static func slideRepeat(animation: CAAnimation, duration: CFTimeInterval, direction: Direction) -> CAAnimation {
         let anim = animation.copy() as! CAAnimation
-        anim.repeatCount = .greatestFiniteMagnitude
+//        anim.repeatCount = .greatestFiniteMagnitude
         anim.duration = duration
         anim.speed = (direction == .right || direction == .down) ? fabsf(anim.speed) : -fabsf(anim.speed)
         return anim

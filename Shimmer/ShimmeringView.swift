@@ -106,6 +106,11 @@ final public class ShimmeringView: UIView {
     public var shimmerFadeTime: CFTimeInterval? {
         didSet { shimmerLayer?.shimmerFadeTime = shimmerFadeTime }
     }
+  
+    /// Whether to shimmer repeatedly or stop after a single shimmer. Defaults to 'true'.
+    public var continuousShimmer: Bool = true {
+        didSet { shimmerLayer?.continuousShimmer = continuousShimmer }
+    }
 
     override public func layoutSubviews() {
         contentView.bounds = self.bounds
@@ -131,11 +136,11 @@ import AppKit
 
 final public class ShimmeringView: NSView {
 
-  /// Creates and returns the layer
-  /// - Returns: The layer
-  public override func makeBackingLayer() -> CALayer {
-    return ShimmeringLayer()
-  }
+    /// Creates and returns the layer
+    /// - Returns: The layer
+    public override func makeBackingLayer() -> CALayer {
+      return ShimmeringLayer()
+    }
 
     /// The content view to be shimmered
     public var contentView = NSView() {
@@ -205,9 +210,13 @@ final public class ShimmeringView: NSView {
         didSet { shimmerLayer?.shimmerFadeTime = shimmerFadeTime }
     }
 
+    /// Whether to shimmer repeatedly or stop after a single shimmer. Defaults to 'true'.
+    public var continuousShimmer: Bool = true {
+        didSet { shimmerLayer?.continuousShimmer = continuousShimmer }
+    }
+
     override public func layout() {
         contentView.bounds = self.bounds
-//        contentView.center = self.center
         super.layout()
     }
 
@@ -220,6 +229,12 @@ final public class ShimmeringView: NSView {
       super.init(coder: aDecoder)
       configureViewSetting()
     }
+  
+  /// Do a one-time shimmer
+  public func shimmer() {
+    self.isShimmering = false
+    self.isShimmering = true
+  }
 
   /// Enable Layer-backed view
   private func configureViewSetting() {

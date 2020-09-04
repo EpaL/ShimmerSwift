@@ -79,6 +79,9 @@ final public class ShimmeringLayer: CALayer {
     public var shimmerBeginTime: CFTimeInterval = .greatestFiniteMagnitude {
         didSet { if oldValue != shimmerBeginTime { updateShimmering() } }
     }
+  
+    /// Whether to shimmer repeatedly or stop after a single shimmer. Defaults to 'true'.
+    public var continuousShimmer: Bool = true
 
     /// The duration of the fade used when the shimmer begins. Defaults to 0.1.
     public var shimmerBeginFadeDuration: CFTimeInterval = 0.1
@@ -343,6 +346,9 @@ final public class ShimmeringLayer: CALayer {
     public var shimmerBeginTime: CFTimeInterval = .greatestFiniteMagnitude {
         didSet { if oldValue != shimmerBeginTime { updateShimmering() } }
     }
+  
+    /// Whether to shimmer repeatedly or stop after a single shimmer. Defaults to 'true'.
+    public var continuousShimmer: Bool = true
 
     /// The duration of the fade used when the shimmer begins. Defaults to 0.1.
     public var shimmerBeginFadeDuration: CFTimeInterval = 0.1
@@ -463,13 +469,12 @@ final public class ShimmeringLayer: CALayer {
         createMaskIfNeeded()
         guard let maskLayer = maskLayer else { return }
         layoutIfNeeded()
-
+      
         let disableActions = CATransaction.disableActions()
         if isShimmering == false {
             if disableActions {
                 clearMask()
             } else {
-
                 var slideEndTime: CFTimeInterval = 0
                 if let slideAnimation = maskLayer.animation(forKey: Shimmer.Key.slideAnimation) {
                     let now = CACurrentMediaTime()
@@ -517,20 +522,24 @@ final public class ShimmeringLayer: CALayer {
             }
 
             let animationDuration: CFTimeInterval = Double((length / shimmerSpeed)) + shimmerPauseDuration
-            if let slideAnimation = maskLayer.animation(forKey: Shimmer.Key.slideAnimation) {
+            if let slideAnimation = maskLayer.animation(forKey: Shimmer.Key.slideAnimation),
+               continuousShimmer == true {
                 let repeatAnimation = Shimmer.slideRepeat(
                     animation: slideAnimation,
                     duration: animationDuration,
                     direction: shimmerDirection)
+                repeatAnimation.delegate = self
                 maskLayer.add(repeatAnimation, forKey: Shimmer.Key.slideAnimation)
             } else {
                 let slideAnimation = Shimmer.slideAnimation(duration: animationDuration, direction: shimmerDirection)
                 slideAnimation.fillMode = .forwards
+                slideAnimation.delegate = self
                 slideAnimation.isRemovedOnCompletion = false
                 if shimmerBeginTime == shimmerDefaultBeginTime {
                     shimmerBeginTime = CACurrentMediaTime() + (fadeOutAnimation?.duration ?? 0)
                 }
-                slideAnimation.beginTime = shimmerBeginTime
+//                slideAnimation.beginTime = shimmerBeginTime
+//                print("adding slide animation. duration: \(animationDuration) beginTime: \(shimmerBeginTime)")
                 maskLayer.add(slideAnimation, forKey: Shimmer.Key.slideAnimation)
             }
         }
@@ -554,10 +563,10 @@ extension ShimmeringLayer: CALayerDelegate {
 
 extension ShimmeringLayer: CAAnimationDelegate {
     public func animationDidStop(_ anim: CAAnimation, finished flag: Bool) {
-        if flag == true && anim.value(forKey: Shimmer.Key.endFadeAnimation) as? Bool == true {
-            maskLayer?.fadeLayer.removeAnimation(forKey: Shimmer.Key.fadeAnimation)
-            clearMask()
-        }
+      if flag == true && anim.value(forKey: Shimmer.Key.endFadeAnimation) as? Bool == true {
+          maskLayer?.fadeLayer.removeAnimation(forKey: Shimmer.Key.fadeAnimation)
+          clearMask()
+      }
     }
 }
 #endif
