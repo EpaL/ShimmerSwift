@@ -535,11 +535,12 @@ final public class ShimmeringLayer: CALayer {
                 slideAnimation.fillMode = .forwards
                 slideAnimation.delegate = self
                 slideAnimation.isRemovedOnCompletion = false
+                slideAnimation.autoreverses = true
+              slideAnimation.repeatCount = 0
                 if shimmerBeginTime == shimmerDefaultBeginTime {
                     shimmerBeginTime = CACurrentMediaTime() + (fadeOutAnimation?.duration ?? 0)
                 }
 //                slideAnimation.beginTime = shimmerBeginTime
-//                print("adding slide animation. duration: \(animationDuration) beginTime: \(shimmerBeginTime)")
                 maskLayer.add(slideAnimation, forKey: Shimmer.Key.slideAnimation)
             }
         }
